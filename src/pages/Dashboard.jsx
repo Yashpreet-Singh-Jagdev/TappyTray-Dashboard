@@ -1,22 +1,27 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
     
-// const data = []
 
 const Dashboard = () => {
 
-    const [data, setData] = useState([]);
+    const [data, setData] = useState(() => {
+            const saved = localStorage.getItem("inventory");
+            return saved ? JSON.parse(saved) : [];
+    });
+
+    useEffect(() => {
+        localStorage.setItem("inventory", JSON.stringify(data));
+    }, [data]);
+
     const [name, setName] = useState('');
-    const [category, setCategory] = useState('Vegetables');
+    const [category, setCategory] = useState('Vegetable');
     const [quantity, setQuantity] = useState(0);
-    const [unit, setUnit] = useState('Nos');
-    const [filter, setFilter] = useState('All');
-    
+    const [unit, setUnit] = useState('Nos');    
 
     const handleFormSubmit = (e) => {
         e.preventDefault();
         setData([...data, {name,category,quantity,unit}]);
         setName('');
-        setCategory('Vegetables');
+        setCategory('Vegetable');
         setQuantity(0);
         setUnit('Nos');
     }
@@ -25,14 +30,10 @@ const Dashboard = () => {
         setData(data.filter((_, i) => i !== index));
     }
 
-    const handleFilter = (e) => {
-        setFilter(e.target.value);
-        
-    }
 
   return (
     <>
-    <h1 className="bg-slate-300 h-12 flex items-center justify-center text-lg font-semibold">Dashboard</h1>
+    <h1 className="bg-slate-300 h-12 flex items-center justify-center text-lg font-semibold">Inventory Dashboard</h1>
     <div className="border-2 border-gray-300 rounded-md p-1 m-2 w-3/5 flex items-center justify-center mx-auto">
         <form  onSubmit={handleFormSubmit}>
             <input type="text" placeholder="Name" className="border-2 border-gray-300 rounded-md p-1 m-2 w-50" value={name}
@@ -40,11 +41,11 @@ const Dashboard = () => {
             {/* <label for="category">Category :</label> */}
                 <select name="category" id="category" className="border-2 border-gray-300 rounded-md p-1 m-2" value={category}
             onChange={(e) => setCategory(e.target.value)}>
-                <option value="Vegetables">Vegetables</option>
-                <option value="Fruits">Fruits</option>
+                <option value="Vegetable">Vegetable</option>
+                <option value="Fruit">Fruit</option>
                 <option value="Dairy">Dairy</option>
                 </select>
-            <input type="number" placeholder="Qty" className="border-2 border-gray-300 rounded-md p-1 m-2 w-20" value={quantity}
+            <input type="number" placeholder="Qty" min="0" className="border-2 border-gray-300 rounded-md p-1 m-2 w-20" value={quantity}
             onChange={(e) => setQuantity(e.target.value)}/>
             <select name="unit" id="unit" className="border-2 border-gray-300 rounded-md p-1 m-2 w-20" value={unit}
             onChange={(e) => setUnit(e.target.value)}>
@@ -53,13 +54,7 @@ const Dashboard = () => {
                 </select>
             <button type="submit" className="bg-green-500 text-white rounded-md p-1 m-2 w-20">Create</button>
         </form>
-        <select name="filter" id="filter" className="border-2 border-gray-300 rounded-md p-1 m-2" value={filter}
-            onChange={handleFilter}>
-                <option value="All">All</option>
-                <option value="Vegetables">Vegetables</option>
-                <option value="Fruits">Fruits</option>
-                <option value="Dairy">Dairy</option>
-                </select>
+        
     </div>
 
         {data[0]
