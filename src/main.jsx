@@ -1,10 +1,18 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.jsx'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Dashboard from './pages/Dashboard.jsx';
+// import Performance from './pages/Performance.jsx';
+// import './index.css'
+// import App from './App.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <App />
+    <BrowserRouter>
+      <Routes>
+        <Route path="/dashboard" element={<Dashboard />} />
+        {/* <Route path="/performance" element={<Performance />} /> */}
+      </Routes>
+    </BrowserRouter>
   </StrictMode>,
 )
